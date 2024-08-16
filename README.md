@@ -20,7 +20,14 @@ Primeiro, clone o repositório do projeto:
 git clone https://github.com/VictorVFM/smart-park.git
 ```
 
-### 2. Configuração de ambiente
+### 2. Navegue para o diretório do projeto
+Depois de clonar o repositório, entre no diretório do projeto:
+```bash
+cd smart-park
+```
+
+
+### 3. Configuração de ambiente
 Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina. Em seguida, execute o comando abaixo para iniciar os serviços necessários:
 ```bash
 ./init-system.sh
