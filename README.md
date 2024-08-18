@@ -1,6 +1,6 @@
-# API REST Smart Park
+# API REST Smart Parking
 
-Bem-vindo à API REST Smart Park! Esta API é responsável por gerenciar os recursos relacionados a um estacionamento, como clientes, pagamentos, registros, etc.
+Bem-vindo à API REST Smart Parking! Esta API é responsável por gerenciar os recursos relacionados a um estacionamento, como clientes, pagamentos, registros, etc.
 
 ## Tecnologias Utilizadas
 
@@ -17,13 +17,13 @@ Para executar a aplicação, siga os passos abaixo:
 ### 1. Clone o repositório:
 Primeiro, clone o repositório do projeto:
 ```bash
-git clone https://github.com/VictorVFM/smart-park.git
+git clone https://github.com/VictorVFM/smart-parking.git
 ```
 
 ### 2. Navegue para o diretório do projeto
 Depois de clonar o repositório, entre no diretório do projeto:
 ```bash
-cd smart-park
+cd smart-parking
 ```
 
 
