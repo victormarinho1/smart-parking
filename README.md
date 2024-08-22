@@ -17,7 +17,7 @@ Para executar a aplicação, siga os passos abaixo:
 ### 1. Clone o repositório:
 Primeiro, clone o repositório do projeto:
 ```bash
-git clone https://github.com/VictorVFM/smart-parking.git
+git clone https://github.com/victormarinho1/smart-parking.git
 ```
 
 ### 2. Navegue para o diretório do projeto
