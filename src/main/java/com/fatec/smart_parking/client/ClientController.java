@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("api/v1/clients")
 public class ClientController {
 
     @Autowired
