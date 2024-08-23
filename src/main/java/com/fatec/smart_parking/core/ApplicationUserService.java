@@ -24,7 +24,7 @@ public class ApplicationUserService implements UserDetailsService{
     }
 
     public ApplicationUserDTO convertToDTO(ApplicationUser user){
-        return new ApplicationUserDTO(user.getId(),user.getName(),user.getEmail(),user.getPassword(),user.getRole());
+        return new ApplicationUserDTO(user.getId(),user.getEmail(),user.getPassword(),user.getRole());
     }
 
 }

@@ -8,32 +8,34 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Inheritance;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class ApplicationUser implements UserDetails{
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name  = "role_d")
+public abstract class ApplicationUser implements UserDetails{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private String name;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -46,10 +48,22 @@ public class ApplicationUser implements UserDetails{
     @Column(nullable = false)
     private Role role;
 
+    protected ApplicationUser(Long id, String email, String password, Role role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }    
 
+    protected ApplicationUser(Long id, String email, String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = Role.CLIENT;
+    }  
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(new SimpleGrantedAuthority(role.name()));
+        return Set.of(new SimpleGrantedAuthority("CLIENT"));
     }
 
 

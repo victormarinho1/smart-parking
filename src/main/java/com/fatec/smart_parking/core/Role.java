@@ -1,6 +1,7 @@
 package com.fatec.smart_parking.core;
 
-
 public enum Role {
-    CUSTOMER
+    CLIENT,
+    PARKING,
+    ADMIN
 }

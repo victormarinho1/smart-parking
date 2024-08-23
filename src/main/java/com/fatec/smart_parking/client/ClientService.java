@@ -18,9 +18,9 @@ public class ClientService {
     @Autowired
     private ClientValidator clientValidator;
 
-    public List<ClientDTO> findAll(){
-        List<Client> list = clientRepository.findAll();
-        return list.stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<Client> findAll(){
+        
+        return clientRepository.findAll();
     }
 
     public ClientDTO findById(Long id){
