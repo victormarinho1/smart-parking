@@ -3,10 +3,13 @@ package com.fatec.smart_parking.client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/clients")
@@ -23,17 +26,27 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientDTO> findById(@PathVariable Long id){
-        ClientDTO clientDTO = clientService.findById(id);
-        return ResponseEntity.ok().body(clientDTO);
+        ClientDTO client = clientService.findById(id);
+        return ResponseEntity.ok().body(client);
     }
 
     @PostMapping
     public ResponseEntity<ClientDTO> create(@RequestBody ClientDTO clientDTO){
-        Client client = clientService.create(clientDTO);
-        client.setPassword(new BCryptPasswordEncoder().encode(client.getPassword()));
-        clientDTO = clientService.convertToDTO(client);
-        return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
+        ClientDTO client = clientService.create(clientDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
+        ClientDTO client = clientService.update(id, clientDTO);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(client);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        clientService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
