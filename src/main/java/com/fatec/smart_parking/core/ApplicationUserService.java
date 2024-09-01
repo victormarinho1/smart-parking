@@ -2,6 +2,7 @@ package com.fatec.smart_parking.core;
 
 import java.util.Optional;
 
+import com.fatec.smart_parking.core.exception.EmailAlreadyTakenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,5 +27,12 @@ public class ApplicationUserService implements UserDetailsService{
     public ApplicationUserDTO convertToDTO(ApplicationUser user){
         return new ApplicationUserDTO(user.getId(),user.getEmail(),user.getPassword(),user.getRole());
     }
+
+    public void checkEmailExists(String email) {
+        if(applicationUserRepository.existsByEmail(email)){
+            throw new EmailAlreadyTakenException();
+        }
+    }
+
 
 }

@@ -4,19 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import com.fatec.smart_parking.core.ApplicationUser;
+import lombok.experimental.SuperBuilder;
 
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@DiscriminatorValue("CLIENT")
+@SuperBuilder
 public class Client extends ApplicationUser {
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(unique = true, nullable = false)
+    private String document;
 
-    public Client(Long id,String name, String email,String password){
-        super(id, email, password);
-        this.name = name;
-    }
 }

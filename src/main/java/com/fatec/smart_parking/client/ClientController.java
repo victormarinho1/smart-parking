@@ -19,8 +19,8 @@ public class ClientController {
     private ClientService clientService;
 
     @GetMapping
-    public ResponseEntity<List<Client>> findAll(){
-        List<Client> list = clientService.findAll();
+    public ResponseEntity<List<ClientDTO>> findAll(){
+        List<ClientDTO> list = clientService.findAll();
         return ResponseEntity.ok().body(list);
     }
 
@@ -31,14 +31,14 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientDTO> create(@RequestBody ClientDTO clientDTO){
-        ClientDTO client = clientService.create(clientDTO);
+    public ResponseEntity<ClientDTO> create(@RequestBody Client newClient){
+        ClientDTO client = clientService.create(newClient);
         return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
-        ClientDTO client = clientService.update(id, clientDTO);
+    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody Client newClient) {
+        ClientDTO client = clientService.update(id, newClient);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }

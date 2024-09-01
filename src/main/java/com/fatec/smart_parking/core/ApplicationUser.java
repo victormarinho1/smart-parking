@@ -1,8 +1,14 @@
 package com.fatec.smart_parking.core;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,20 +24,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Inheritance;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name  = "role_d")
-public abstract class ApplicationUser implements UserDetails{
+@SuperBuilder
+public class ApplicationUser implements UserDetails{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,35 +44,48 @@ public abstract class ApplicationUser implements UserDetails{
     private String email;
 
     @Column(nullable = false)
+    private String name;
+
+
+    @Column(nullable = false)
     private String password;
 
-
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    protected ApplicationUser(Long id, String email, String password, Role role) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }    
-
-    protected ApplicationUser(Long id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = Role.CLIENT;
-    }  
+    @Column(nullable = false)
+    private Boolean enabled = true;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(new SimpleGrantedAuthority("CLIENT"));
+        return List.of();
     }
-
 
     @Override
     public String getUsername() {
         return this.email;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
 
 }
