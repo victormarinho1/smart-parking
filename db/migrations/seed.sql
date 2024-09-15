@@ -120,3 +120,10 @@ WHERE
     n.nspname NOT IN ('pg_catalog', 'information_schema')
 ORDER BY
     trigger_name;
+
+
+
+
+INSERT INTO  users
+(id, "name", email, "password", "role", enabled)
+VALUES(1, 'Administrador', 'admin@gmail.com', '$2a$10$1HVGUdEQ1y4DX10DRUKDK.z/i59K9iXQeQty8Pwc8znnuSoua2Ta6', 'ADMIN'::public."role_type", true);
