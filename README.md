@@ -34,3 +34,10 @@ Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina. Em 
 ```
 Este comando irá iniciar os serviços necessários, como o banco de dados PostGres, e deixá-los rodando em segundo plano.
 
+
+
+## Documentação da API
+A documentação da API está acessível por meio do Swagger. Para consultá-la, visite o seguinte link:
+```bash
+http://localhost:8080/docs/documentation
+```
