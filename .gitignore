@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ## Credentials
-./env
+.env
 src/main/resources/application.properties
