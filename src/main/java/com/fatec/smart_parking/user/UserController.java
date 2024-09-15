@@ -1,8 +1,9 @@
-package com.fatec.smart_parking.client;
+package com.fatec.smart_parking.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,41 +13,43 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
-@RequestMapping("api/v1/clients")
-public class ClientController {
+@RequestMapping("api/v1/users")
+public class UserController {
 
     @Autowired
-    private ClientService clientService;
+    private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<ClientDTO>> findAll(){
-        List<ClientDTO> list = clientService.findAll();
+    public ResponseEntity<List<UserDTO>> findAll(){
+        List<UserDTO> list = userService.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDTO> findById(@PathVariable Long id){
-        ClientDTO client = clientService.findById(id);
-        return ResponseEntity.ok().body(client);
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id){
+        UserDTO user = userService.findById(id);
+        return ResponseEntity.ok().body(user);
     }
 
     @PostMapping
-    public ResponseEntity<ClientDTO> create(@RequestBody Client newClient){
-        ClientDTO client = clientService.create(newClient);
-        return ResponseEntity.status(HttpStatus.CREATED).body(client);
+    public ResponseEntity<UserDTO> create(@RequestBody User newUser){
+        UserDTO user = userService.create(newUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody Client newClient) {
-        ClientDTO client = clientService.update(id, newClient);
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody User newUser) {
+        UserDTO user = userService.update(id, newUser);
         
-        return ResponseEntity.status(HttpStatus.CREATED).body(client);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        clientService.delete(id);
+        userService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+
 
 }

@@ -1,11 +1,10 @@
-package com.fatec.smart_parking.client;
+package com.fatec.smart_parking.user;
 
 import com.fatec.smart_parking.core.Role;
 
-public record ClientDTO(
+public record UserDTO(
         Long id,
         String name,
-        String document,
         String email,
         Role role,
         Boolean enabled

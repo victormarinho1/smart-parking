@@ -1,13 +1,16 @@
-package com.fatec.smart_parking.client;
+package com.fatec.smart_parking.user;
 
+import com.fatec.smart_parking.core.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface ClientRepository extends JpaRepository<Client, Long> {
-    Optional<Client> findByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmailAndRole(String email, Role role);
+    Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
-    boolean existsByDocument(String document);
+
 }

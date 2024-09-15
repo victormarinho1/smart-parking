@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
 
@@ -26,13 +27,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ClientNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ResponseEntity<ApiError> handleMeasurementNotFoundException(ClientNotFoundException exception,HttpServletRequest request) {
+    public ResponseEntity<ApiError> handleMeasurementNotFoundException(UserNotFoundException exception,HttpServletRequest request) {
         ApiError apiError = new ApiError(
                 request.getRequestURI(),
-                "Client Doesn't Exist",
+                "User Doesn't Exist",
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
 
@@ -41,20 +42,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ParkingNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public ResponseEntity<ApiError> handleMeasurementNotFoundException(ParkingNotFoundException exception,HttpServletRequest request) {
-        ApiError apiError = new ApiError(
-                request.getRequestURI(),
-                "Parking Doesn't Exist",
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler(EmailAlreadyTakenException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -84,20 +71,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DocumentAlreadyTakenException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ResponseEntity<ApiError> handleEmailAlreadyTakenException(DocumentAlreadyTakenException exception,HttpServletRequest request) {
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ApiError> handleNoHandlerFoundException(NoHandlerFoundException exception,HttpServletRequest request) {
         ApiError apiError = new ApiError(
                 request.getRequestURI(),
-                "Document already taken",
-                HttpStatus.BAD_REQUEST.value(),
+                "Endpoint not found.",
+                HttpStatus.NOT_FOUND.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+        return  new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
-
-
 
 }

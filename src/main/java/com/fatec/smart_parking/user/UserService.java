@@ -1,9 +1,12 @@
-package com.fatec.smart_parking.client;
+package com.fatec.smart_parking.user;
 
-import com.fatec.smart_parking.core.ApplicationUserService;
 import com.fatec.smart_parking.core.Role;
-import com.fatec.smart_parking.core.exception.ClientNotFoundException;
+
+import com.fatec.smart_parking.core.exception.EmailAlreadyTakenException;
+import com.fatec.smart_parking.core.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,73 +17,78 @@ import java.util.Optional;
 
 
 @Service
-public class ClientService extends ApplicationUserService {
+public class UserService{
 
     @Autowired
-    private ClientRepository clientRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private ClientValidator clientValidator;
+    private UserValidator userValidator;
 
-    public List<ClientDTO> findAll(){
-        List<Client> clientsList = clientRepository.findAll();
-        List<ClientDTO> clientsDTOList = new  ArrayList();
-        for (Client client : clientsList) {
-            clientsDTOList.add(convertToDTO(client));
+    public List<UserDTO> findAll(){
+        List<User> clientsList = userRepository.findAll();
+        List<UserDTO> clientsDTOList = new  ArrayList();
+        for (User user : clientsList) {
+            clientsDTOList.add(convertToDTO(user));
         }
         return clientsDTOList;
     }
 
-    public ClientDTO findById(Long id){
-        Client client = clientRepository.findById(id)
-                .orElseThrow(ClientNotFoundException::new);
-        return convertToDTO(client);
+    public UserDTO findById(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return convertToDTO(user);
     }
 
-    public ClientDTO findByEmail(String email){
-        Client client = clientRepository.findByEmail(email)
-                .orElseThrow(ClientNotFoundException::new);
-        return convertToDTO(client);
+    public UserDTO findByEmail(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        return convertToDTO(user);
     }
 
-    public ClientDTO create(Client client) {
-        clientValidator.checkEmailExists(client.getEmail());
-        clientValidator.checkEmailValidity(client.getEmail());
-        clientValidator.checkDocumentExists(client.getDocument());
-        client.setRole(Role.CLIENT);
-        client.setPassword(new BCryptPasswordEncoder().encode(client.getPassword()));
-        return convertToDTO(clientRepository.save(client));
+    public UserDTO create(User user) {
+        userValidator.checkEmailExists(user.getEmail());
+        userValidator.checkEmailValidity(user.getEmail());
+        user.setRole(Role.CLIENT);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        return convertToDTO(userRepository.save(user));
     }
 
-    public ClientDTO update(Long id, Client client){
-        Optional<Client> optionalClient = clientRepository.findById(id);
+    public UserDTO update(Long id, User user){
+        Optional<User> optionalUser = userRepository.findById(id);
         
-        if(optionalClient.isPresent()){   
+        if(optionalUser.isPresent()){
 
-            clientValidator.checkEmailExists(client.getEmail());
-            clientValidator.checkEmailValidity(client.getEmail());
-            updateData(client, client);
-            return convertToDTO(clientRepository.save(client));
+            userValidator.checkEmailExists(user.getEmail());
+            userValidator.checkEmailValidity(user.getEmail());
+            updateData(user, user);
+            return convertToDTO(userRepository.save(user));
         }
-        throw new ClientNotFoundException();
+        throw new UserNotFoundException();
     }
 
     public void delete(Long id){
-        Optional<Client> optionalClient = clientRepository.findById(id);
-        if(optionalClient.isPresent()){
-            clientRepository.deleteById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isPresent()){
+            userRepository.deleteById(id);
         } else {
-            throw new ClientNotFoundException();
+            throw new UserNotFoundException();
         }
     }
 
-    public ClientDTO convertToDTO(Client client) {
-        return new ClientDTO(client.getId(), client.getName(),client.getDocument(),client.getEmail(),client.getRole(),client.getEnabled());
+    public UserDTO convertToDTO(User user) {
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getEnabled());
     }
 
-    public void updateData(Client client, Client newClient){
-        client.setName(newClient.getName());
-        client.setEmail(newClient.getEmail());
-        client.setPassword(new BCryptPasswordEncoder().encode(newClient.getPassword()));
+    public void updateData(User user, User newUser){
+        user.setName(newUser.getName());
+        user.setEmail(newUser.getEmail());
+        user.setPassword(new BCryptPasswordEncoder().encode(newUser.getPassword()));
+    }
+
+    public void checkEmailExists(String email) {
+        if(userRepository.existsByEmail(email)){
+            throw new EmailAlreadyTakenException();
+        }
     }
 }

@@ -1,10 +1,9 @@
-package com.fatec.smart_parking.core;
+package com.fatec.smart_parking.user;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fatec.smart_parking.core.Role;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -14,7 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.EnumType;
@@ -22,19 +20,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Inheritance;
 
-@Entity
-@Table(name = "users")
+@Entity@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Inheritance(strategy = InheritanceType.JOINED)
-@SuperBuilder
-public class ApplicationUser implements UserDetails{
+public class User implements UserDetails{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,7 +52,8 @@ public class ApplicationUser implements UserDetails{
     private Boolean enabled = true;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if(this.role == Role.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
@@ -87,5 +81,10 @@ public class ApplicationUser implements UserDetails{
         return this.enabled;
     }
 
-
+    public User(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.role = Role.CLIENT;
+    }
 }
