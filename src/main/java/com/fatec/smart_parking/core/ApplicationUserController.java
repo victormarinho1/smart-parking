@@ -56,4 +56,8 @@ public class ApplicationUserController{
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity resetPassword(@RequestBody @Valid String email){
+
+    }
 }
