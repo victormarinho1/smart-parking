@@ -4,7 +4,6 @@ import com.fatec.smart_parking.core.authentication.LoginDTO;
 import com.fatec.smart_parking.core.authentication.LoginResponseDTO;
 import com.fatec.smart_parking.core.authentication.RegisterDTO;
 import com.fatec.smart_parking.core.config.TokenService;
-import com.fatec.smart_parking.core.exception.EmailAlreadyTakenException;
 import com.fatec.smart_parking.user.User;
 import com.fatec.smart_parking.user.UserRepository;
 import com.fatec.smart_parking.user.UserValidator;
@@ -35,6 +34,11 @@ public class ApplicationUserController{
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ApplicationUserService applicationUserService;
+
+
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid LoginDTO loginDTO) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(loginDTO.email(),loginDTO.password());
@@ -56,8 +60,9 @@ public class ApplicationUserController{
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity resetPassword(@RequestBody @Valid String email){
-
+    @PostMapping("/reset-password/{email}")
+    public ResponseEntity resetPassword(@PathVariable @Valid String email){
+        this.applicationUserService.resetPassword(email);
+    return  ResponseEntity.ok().build();
     }
 }
