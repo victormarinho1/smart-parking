@@ -1,5 +1,6 @@
 package com.fatec.smart_parking.core.config;
 
+import com.fatec.smart_parking.core.authentication.AuthenticationService;
 import com.fatec.smart_parking.user.User;
 import com.fatec.smart_parking.user.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,6 +28,11 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
+
+        if(request.getRequestURI().startsWith("/api/v1/vehicles/plate")){
+            Authentication authentication = AuthenticationService.getAuthentication((HttpServletRequest) request);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
         if (token != null) {
             var email = tokenService.validateToken(token);
             Optional<User> optUser = userRepository.findByEmail(email);
@@ -36,8 +43,13 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
 
         }
-
         filterChain.doFilter(request, response);
+    }
+
+    private String recoverApiKey(HttpServletRequest request){
+        var authHeader = request.getHeader("X-API-KEY");
+        if (authHeader == null) return null;
+        return authHeader;
     }
 
     private String recoverToken(HttpServletRequest request) {
