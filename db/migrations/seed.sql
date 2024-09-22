@@ -20,17 +20,24 @@ CREATE TABLE color(
 	name VARCHAR(100) NOT NULL,
 	enabled boolean NOT NULL DEFAULT TRUE
 );
+
+CREATE TABLE make_car(
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
+	enabled BOOLEAN NOT NULL DEFAULT TRUE
+);
  
 CREATE TABLE vehicles (
     id SERIAL PRIMARY KEY,
     client_id INT NOT NULL,
-    make VARCHAR(50) NOT NULL,
+    make_id INT NOT NULL,
     model VARCHAR(50) NOT NULL,
     plate VARCHAR(7) NOT NULL UNIQUE,
     year INT NOT NULL CHECK (YEAR > 1885),
     color_id INT NOT NULL,
-    enabled boolean NOT NULL DEFAULT TRUE,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (client_id) REFERENCES users(id),
+    FOREIGN KEY (make_id) REFERENCES make_car(id),
     FOREIGN KEY (color_id) REFERENCES color(id)
 );
  
@@ -122,8 +129,59 @@ ORDER BY
     trigger_name;
 
 
-
+--Seed
 
 INSERT INTO  users
-(id, "name", email, "password", "role", enabled)
-VALUES(1, 'Administrador', 'admin@gmail.com', '$2a$10$1HVGUdEQ1y4DX10DRUKDK.z/i59K9iXQeQty8Pwc8znnuSoua2Ta6', 'ADMIN'::public."role_type", true);
+("name", email, "password", "role")
+VALUES('Administrador', 'admin@gmail.com', '$2a$10$1HVGUdEQ1y4DX10DRUKDK.z/i59K9iXQeQty8Pwc8znnuSoua2Ta6', 'ADMIN'::public."role_type");
+
+INSERT INTO users (name, email, password, role) VALUES
+('João Silva', 'joao.silva@example.com', 'senha123', 'CLIENT'),
+('Maria Oliveira', 'maria.oliveira@example.com', 'senha456', 'CLIENT'),
+('Carlos Santos', 'carlos.santos@example.com', 'senha789', 'CLIENT'),
+('Ana Pereira', 'ana.pereira@example.com', 'senha321', 'CLIENT'),
+('Ricardo Gomes', 'ricardo.gomes@example.com', 'senha654', 'CLIENT');
+
+
+
+INSERT INTO color (name) VALUES
+('Preto'),
+('Branco'),
+('Prata'),
+
+('Vermelho'),
+('Azul'),
+('Verde'),
+('Amarelo'),
+('Laranja'),
+('Cinza'),
+('Roxo'),
+('Dourado'),
+('Marrom'),
+('Bege'),
+('Turquesa'),
+('Vinho');
+
+INSERT INTO make_car (name) VALUES
+('Toyota'),
+('Ford'),
+('Chevrolet'),
+('Volkswagen'),
+('Honda'),
+('Nissan'),
+('Hyundai'),
+('Kia'),
+('BMW'),
+('Mercedes-Benz'),
+('Audi'),
+('Subaru'),
+('Mazda'),
+('Lexus'),
+('Fiat');
+
+INSERT INTO vehicles (client_id, make_id, model, plate, year, color_id, enabled) VALUES
+(1, 1, 'Corolla', 'ABC1D23', 2020, 1, TRUE),
+(2, 2, 'Fiesta', 'XYZ4E56', 2019, 2, TRUE),
+(3, 3, 'Onix', 'JKL7M89', 2021, 5, TRUE),
+(1, 4, 'Gol', 'NOP0Q12', 2022, 3, TRUE),
+(2, 5, 'Civic', 'RST3U45', 2020, 4, TRUE);
