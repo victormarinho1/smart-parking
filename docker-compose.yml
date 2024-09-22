@@ -11,6 +11,7 @@ services:
       - "8080:8080"
     depends_on:
       - postgres-db
+      - rabbitmq
     environment:
       - spring.datasource.url=jdbc:postgresql://postgres-db:5432/${DB_DATABASE}
       - spring.datasource.username=postgres
@@ -29,6 +30,11 @@ services:
       - spring.mail.password=${EMAIL_PASSWORD}
       - spring.mail.properties.mail.smtp.auth=true
       - spring.mail.properties.mail.smtp.starttls.enable=true
+      - spring.rabbitmq.host=rabbitmq
+      - spring.rabbitmq.port=5672
+
+    networks:
+      - smart_parking
       
 
   postgres-db:
@@ -42,11 +48,19 @@ services:
       - "5432:5432"
     volumes:
       - ./db/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - smart_parking
+    
 
   rabbitmq:
     image: rabbitmq:3.13-management
+    hostname: rabbitmq
     ports:
       - 15672:15672
       - 5672:5672
+    networks:
+      - smart_parking
+networks:
+  smart_parking:
 
 
