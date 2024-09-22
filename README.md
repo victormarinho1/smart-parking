@@ -25,9 +25,14 @@ Depois de clonar o repositório, entre no diretório do projeto:
 ```bash
 cd smart-parking
 ```
+### 3. Configure as Variáveis de Ambiente
+Preencha as variáveis de ambiente necessárias:
+```bash
+EMAIL_USERNAME='seu_email@example.com'
+EMAIL_PASSWORD='sua_senha_de_app'
+```
 
-
-### 3. Configuração de ambiente
+### 4. Configuração de ambiente
 Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina. Em seguida, execute o comando abaixo para iniciar os serviços necessários:
 ```bash
 ./init-system.sh

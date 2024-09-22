@@ -1,20 +1,27 @@
 package com.fatec.smart_parking.core;
 
+import com.fatec.smart_parking.core.authentication.EmailResponseDTO;
 import com.fatec.smart_parking.core.authentication.LoginDTO;
 import com.fatec.smart_parking.core.authentication.LoginResponseDTO;
 import com.fatec.smart_parking.core.authentication.RegisterDTO;
 import com.fatec.smart_parking.core.config.TokenService;
+import com.fatec.smart_parking.core.listener.EmailSentEventDTO;
 import com.fatec.smart_parking.user.User;
-import com.fatec.smart_parking.user.UserRepository;
-import com.fatec.smart_parking.user.UserValidator;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+
+import static com.fatec.smart_parking.core.config.RabbitMqConfig.EMAIL_SENT_QUEUE;
 
 
 @RestController
@@ -23,19 +30,16 @@ import org.springframework.web.bind.annotation.*;
 public class ApplicationUserController{
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private UserValidator userValidator;
 
     @Autowired
     private TokenService tokenService;
 
     @Autowired
     private ApplicationUserService applicationUserService;
+
+    @Autowired
+    private final RabbitTemplate rabbitTemplate;
 
 
 
@@ -50,19 +54,19 @@ public class ApplicationUserController{
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO registerDTO){
-        userValidator.checkEmailExists(registerDTO.email());
-        userValidator.checkEmailValidity(registerDTO.email());
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
-        User newUser = new User(registerDTO.email(),registerDTO.name(), encryptedPassword);
-
-        this.userRepository.save(newUser);
-        return ResponseEntity.ok().build();
+        this.applicationUserService.create(registerDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/reset-password/{email}")
-    public ResponseEntity resetPassword(@PathVariable @Valid String email){
-        this.applicationUserService.resetPassword(email);
-    return  ResponseEntity.ok().build();
+    @PostMapping("/reset-password")
+    public ResponseEntity resetPassword(@RequestBody @Valid EmailSentEventDTO email){
+        rabbitTemplate.convertAndSend(EMAIL_SENT_QUEUE, email);
+        EmailResponseDTO response = new EmailResponseDTO(
+                "Password reset email sent.",
+                HttpStatus.OK.value(),
+                HttpStatus.OK.getReasonPhrase(),
+                LocalDateTime.now()
+        );
+        return  ResponseEntity.ok(response);
     }
 }

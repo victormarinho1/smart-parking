@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fatec.smart_parking.core.Role;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
@@ -81,7 +80,7 @@ public class User implements UserDetails{
         return this.enabled;
     }
 
-    public User(String email, String name, String password) {
+    public User(String email, String name, String password,Role role) {
         this.email = email;
         this.name = name;
         this.password = password;

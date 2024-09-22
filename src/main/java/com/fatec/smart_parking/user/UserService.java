@@ -5,8 +5,6 @@ import com.fatec.smart_parking.core.Role;
 import com.fatec.smart_parking.core.exception.EmailAlreadyTakenException;
 import com.fatec.smart_parking.core.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

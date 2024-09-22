@@ -1,12 +1,19 @@
 package com.fatec.smart_parking.core;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
+import com.fatec.smart_parking.client.ClientService;
+import com.fatec.smart_parking.core.authentication.EmailResponseDTO;
+import com.fatec.smart_parking.core.authentication.RegisterDTO;
 import com.fatec.smart_parking.core.email.EmailService;
+import com.fatec.smart_parking.core.listener.EmailSentEventDTO;
 import com.fatec.smart_parking.user.User;
+import com.fatec.smart_parking.user.UserDTO;
 import com.fatec.smart_parking.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +24,9 @@ public class ApplicationUserService implements UserDetailsService{
     
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ClientService clientService;
 
     @Autowired
     private EmailService emailService;
@@ -45,15 +55,19 @@ public class ApplicationUserService implements UserDetailsService{
         throw new UsernameNotFoundException(email);
     }
 
+    public UserDTO create(RegisterDTO registerDTO) {
+        return this.clientService.create(registerDTO);
+    }
 
-    public void resetPassword(String email){
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        String newPassword = generateRandomPassword();
-        String encryptedPassword = new BCryptPasswordEncoder().encode(newPassword);
+
+    public EmailResponseDTO resetPassword(EmailSentEventDTO emailSentEventDTO){
+      Optional<User> optionalUser = userRepository.findByEmail(emailSentEventDTO.email());
         if(optionalUser.isPresent()){
+            String newPassword = generateRandomPassword();
+            String encryptedPassword = new BCryptPasswordEncoder().encode(newPassword);
             optionalUser.get().setPassword(encryptedPassword);
             this.userRepository.save(optionalUser.get());
-            this.emailService.sendHtmlMessage(email,"Sua senha foi redefinida",
+            this.emailService.sendHtmlMessage(emailSentEventDTO.email(),"Sua senha foi redefinida",
                     "<!DOCTYPE html>\n" +
                             "<html lang=\"pt-BR\">\n" +
                             "<head>\n" +
@@ -121,7 +135,13 @@ public class ApplicationUserService implements UserDetailsService{
                             "</html>\n");
         }
 
-
+        EmailResponseDTO emailResponseDTO = new EmailResponseDTO(
+                "E-mail successfully sent to "+emailSentEventDTO.email(),
+                HttpStatus.OK.value(),
+                HttpStatus.OK.getReasonPhrase(),
+                LocalDateTime.now()
+        );
+    return emailResponseDTO;
 
     }
 
