@@ -29,7 +29,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
 
-        if(request.getRequestURI().startsWith("/api/v1/vehicles/plate")){
+        if(request.getRequestURI().startsWith("/api/v1/parking-records/entry")||request.getRequestURI().startsWith("/api/v1/parking-records/exit")){
             Authentication authentication = AuthenticationService.getAuthentication((HttpServletRequest) request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

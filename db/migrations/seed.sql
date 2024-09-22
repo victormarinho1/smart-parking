@@ -11,7 +11,7 @@ CREATE TABLE users(
  
 CREATE TABLE parkings(
 	id SERIAL PRIMARY KEY,
-	name VARCHAR(10) NOT NULL,
+	name VARCHAR(100) NOT NULL,
 	enabled boolean NOT NULL DEFAULT TRUE
 );
  
@@ -45,7 +45,6 @@ CREATE TABLE parking_records(
 	id SERIAL PRIMARY KEY,
 	vehicles_id INT NOT NULL,
 	parking_id INT NOT NULL,
-	car_plate VARCHAR(7) NOT NULL,
 	entry_time TIMESTAMP NOT NULL,
 	exit_time TIMESTAMP,
 	FOREIGN KEY (vehicles_id) REFERENCES vehicles(id),
@@ -185,3 +184,14 @@ INSERT INTO vehicles (client_id, make_id, model, plate, year, color_id, enabled)
 (3, 3, 'Onix', 'JKL7M89', 2021, 5, TRUE),
 (1, 4, 'Gol', 'NOP0Q12', 2022, 3, TRUE),
 (2, 5, 'Civic', 'RST3U45', 2020, 4, TRUE);
+
+INSERT INTO parkings
+(id, "name")
+VALUES(1, 'Shopping Bandeiras');
+
+INSERT INTO parking_records
+(id, vehicles_id, parking_id, entry_time, exit_time)
+VALUES(1, 4, 1, '2024-09-22 19:02:07.960', '2024-09-22 23:02:07.960');
+
+INSERT INTO payments (parking_records_id, amount, payment_date, transaction_id, pix_key, pix_code) 
+VALUES (1, 50.00, '2024-09-22 10:00:00', 'TX123456', 'key@example.com', 'PIX123456789');

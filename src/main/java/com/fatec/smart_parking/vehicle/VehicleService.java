@@ -12,18 +12,19 @@ public class VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
-    public VehicleDTO findByPlate(String plate) {
+    public Vehicle findByPlate(String plate) {
         Optional<Vehicle>  optVehicle = this.vehicleRepository.findByPlate(plate);
         if(optVehicle.isPresent()){
-            VehicleDTO vehicleDTO = convertToDTO(optVehicle.get());
-            return vehicleDTO;
+            Vehicle vehicle = optVehicle.get();
+            return vehicle;
         }
         throw new VehicleNotFoundException();
     }
 
 
+
     public VehicleDTO convertToDTO(Vehicle vehicle) {
-        return new VehicleDTO(vehicle.getClient().getName(),vehicle.getModel());
+        return new VehicleDTO(vehicle.getPlate());
     }
 
 

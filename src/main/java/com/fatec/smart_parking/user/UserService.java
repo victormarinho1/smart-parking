@@ -84,9 +84,5 @@ public class UserService{
         user.setPassword(new BCryptPasswordEncoder().encode(newUser.getPassword()));
     }
 
-    public void checkEmailExists(String email) {
-        if(userRepository.existsByEmail(email)){
-            throw new EmailAlreadyTakenException();
-        }
-    }
+
 }
