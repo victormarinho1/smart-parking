@@ -24,13 +24,13 @@ public class ParkingRecordController {
     }
 
     @PostMapping
-    public ResponseEntity<List<ParkingRecordDTO>> findAllCurrentRecords(@RequestBody LoginResponseDTO tokenDTO) {
-       return ResponseEntity.ok(this.parkingRecordService.findByCurrentRecords(tokenDTO));
+    public ResponseEntity<List<ParkingRecordDTO>> findAllCurrentRecords() {
+       return ResponseEntity.ok(this.parkingRecordService.findByCurrentRecords());
     }
 
     @PostMapping("/history")
-    public ResponseEntity<List<ParkingHistoryDTO>> parkingHistory(@RequestBody LoginResponseDTO tokenDTO) {
-        return ResponseEntity.ok(this.parkingRecordService.parkingHistory(tokenDTO));
+    public ResponseEntity<List<ParkingHistoryDTO>> parkingHistory() {
+        return ResponseEntity.ok(this.parkingRecordService.parkingHistory());
     }
 
 

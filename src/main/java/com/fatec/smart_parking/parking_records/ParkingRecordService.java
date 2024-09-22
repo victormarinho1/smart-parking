@@ -49,7 +49,7 @@ public class ParkingRecordService {
         return parkingRecordDTO;
     }
 
-    public List<ParkingRecordDTO> findByCurrentRecords(LoginResponseDTO tokenDTO){
+    public List<ParkingRecordDTO> findByCurrentRecords(){
         User user = this.authenticationService.getCurrentUser();
         List<ParkingRecord> parkingRecordList = this.parkingRecordRepository.FindByUserId(user.getId());
         return  parkingRecordList.stream()
@@ -58,7 +58,7 @@ public class ParkingRecordService {
     }
 
 
-    public List<ParkingHistoryDTO> parkingHistory(LoginResponseDTO tokenDTO){
+    public List<ParkingHistoryDTO> parkingHistory(){
         User user = this.authenticationService.getCurrentUser();
         List<Payment> paymentList = this.paymentService.findAllByUser(user.getId());
 
