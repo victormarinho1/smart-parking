@@ -26,7 +26,7 @@ Depois de clonar o repositório, entre no diretório do projeto:
 cd smart-parking
 ```
 ### 3. Configure as Variáveis de Ambiente
-Preencha as variáveis de ambiente necessárias:
+Preencha as variáveis de ambiente necessárias no arquivo .env-example:
 ```bash
 EMAIL_USERNAME='seu_email@example.com'
 EMAIL_PASSWORD='sua_senha_de_app'
