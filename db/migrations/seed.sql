@@ -8,11 +8,23 @@ CREATE TABLE users(
 	role role_type NOT NULL DEFAULT 'CLIENT',
 	enabled boolean NOT NULL DEFAULT TRUE
 );
+
+CREATE TABLE addresses (
+    id SERIAL PRIMARY KEY,
+    street VARCHAR(100) NOT NULL,
+    neighborhood VARCHAR(50) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    state VARCHAR(50) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL
+);
  
 CREATE TABLE parkings(
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
-	enabled boolean NOT NULL DEFAULT TRUE
+    url_image TEXT,
+    address_id INT,
+	enabled boolean NOT NULL DEFAULT TRUE,
+    FOREIGN KEY (address_id) REFERENCES addresses(id)
 );
  
 CREATE TABLE color(
