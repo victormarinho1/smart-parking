@@ -10,7 +10,10 @@ import com.fatec.smart_parking.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
@@ -45,6 +48,16 @@ public class VehicleService {
                 true);
         VehicleDTO vehicleCreated = convertToDTO(this.vehicleRepository.save(vehicle));
         return  vehicleCreated;
+    }
+
+    public List<VehicleDTO> findByAll(){
+        User user = this.authenticationService.getCurrentUser();
+        List<Vehicle> vehiclesList = this.vehicleRepository.findByClient(user);
+
+        return vehiclesList.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
     }
 
 
