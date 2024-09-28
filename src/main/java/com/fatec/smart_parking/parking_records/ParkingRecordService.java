@@ -1,7 +1,7 @@
 package com.fatec.smart_parking.parking_records;
 
 import com.fatec.smart_parking.core.authentication.AuthenticationService;
-import com.fatec.smart_parking.core.authentication.LoginResponseDTO;
+
 
 import com.fatec.smart_parking.parking.Parking;
 import com.fatec.smart_parking.parking.ParkingService;
@@ -11,7 +11,6 @@ import com.fatec.smart_parking.payment.PaymentService;
 import com.fatec.smart_parking.user.User;
 
 import com.fatec.smart_parking.vehicle.Vehicle;
-import com.fatec.smart_parking.vehicle.VehicleDTO;
 import com.fatec.smart_parking.vehicle.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,8 +36,8 @@ public class ParkingRecordService {
 
     @Autowired
     private PaymentService paymentService;
-    public ParkingRecordDTO create(VehicleDTO vehicleDTO){
-        Vehicle vehicle = this.vehicleService.findByPlate(vehicleDTO.plate());
+    public ParkingRecordDTO create(PlateDTO plateDTO){
+        Vehicle vehicle = this.vehicleService.findByPlate(plateDTO.plate());
         Parking parking = this.parkingService.findFirstParking();
         ParkingRecord parkingRecord = new ParkingRecord(null,vehicle,parking,LocalDateTime.now(),null);
         ParkingRecordDTO parkingRecordDTO = new ParkingRecordDTO(
