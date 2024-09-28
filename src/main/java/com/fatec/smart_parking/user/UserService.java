@@ -2,6 +2,7 @@ package com.fatec.smart_parking.user;
 
 import com.fatec.smart_parking.core.Role;
 
+import com.fatec.smart_parking.core.authentication.AuthenticationService;
 import com.fatec.smart_parking.core.exception.EmailAlreadyTakenException;
 import com.fatec.smart_parking.core.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class UserService{
 
     @Autowired
     private UserValidator userValidator;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     public List<UserDTO> findAll(){
         List<User> clientsList = userRepository.findAll();
@@ -63,6 +67,11 @@ public class UserService{
             return convertToDTO(userRepository.save(user));
         }
         throw new UserNotFoundException();
+    }
+
+    public UserDTO getCurrentUser(){
+       User user =  this.authenticationService.getCurrentUser();
+       return convertToDTO(user);
     }
 
     public void delete(Long id){

@@ -43,6 +43,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> me(){
+       UserDTO userDTO = userService.getCurrentUser();
+        return ResponseEntity.ok().body(userDTO);
+    }
 
 
 }
