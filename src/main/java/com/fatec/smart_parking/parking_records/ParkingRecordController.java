@@ -28,7 +28,7 @@ public class ParkingRecordController {
        return ResponseEntity.ok(this.parkingRecordService.findByCurrentRecords());
     }
 
-    @PostMapping("/history")
+    @GetMapping("/history")
     public ResponseEntity<List<ParkingHistoryDTO>> parkingHistory() {
         return ResponseEntity.ok(this.parkingRecordService.parkingHistory());
     }
