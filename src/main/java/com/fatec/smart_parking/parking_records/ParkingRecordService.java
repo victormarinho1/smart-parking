@@ -48,9 +48,8 @@ public class ParkingRecordService {
         return parkingRecordDTO;
     }
 
-    public List<ParkingRecordDTO> findByCurrentRecords(){
-        User user = this.authenticationService.getCurrentUser();
-        List<ParkingRecord> parkingRecordList = this.parkingRecordRepository.findByUserId(user.getId());
+    public List<ParkingRecordDTO> findByCurrentRecords(Long id){
+        List<ParkingRecord> parkingRecordList = this.parkingRecordRepository.findByUserId(id);
         return  parkingRecordList.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

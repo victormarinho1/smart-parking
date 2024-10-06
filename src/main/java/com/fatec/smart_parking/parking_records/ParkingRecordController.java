@@ -1,5 +1,7 @@
 package com.fatec.smart_parking.parking_records;
 
+import com.fatec.smart_parking.core.authentication.AuthenticationService;
+import com.fatec.smart_parking.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ import java.util.List;
 @RequestMapping("api/v1/parking-records")
 public class ParkingRecordController {
     @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
     private ParkingRecordService parkingRecordService;
 
     @PostMapping("/entry")
@@ -26,9 +31,10 @@ public class ParkingRecordController {
 
     @GetMapping
     public Flux<ServerSentEvent<List<ParkingRecordDTO>>> findAllCurrentRecords() {
+        User user = authenticationService.getCurrentUser();
         return Flux.interval(Duration.ofSeconds(5))
                 .flatMap(sequence ->
-                        Mono.fromCallable(() -> parkingRecordService.findByCurrentRecords())
+                        Mono.fromCallable(() -> parkingRecordService.findByCurrentRecords(user.getId()))
                                 .map(records -> ServerSentEvent.<List<ParkingRecordDTO>>builder()
                                         .data(records)
                                         .build())
