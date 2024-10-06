@@ -84,7 +84,7 @@ public class UserService{
     }
 
     public UserDTO convertToDTO(User user) {
-        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getEnabled());
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getRole().toString(), user.getEnabled());
     }
 
     public void updateData(User user, User newUser){
