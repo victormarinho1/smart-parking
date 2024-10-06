@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ParkingRecordRepository extends JpaRepository<ParkingRecord, Long> {
     @Query("SELECT pr FROM ParkingRecord pr JOIN pr.vehicle v WHERE pr.entryTime IS NOT NULL AND pr.exitTime IS NULL AND v.client.id = :userId")
-    List<ParkingRecord> FindByUserId(@Param("userId") Long userId);
+    List<ParkingRecord> findByUserId(@Param("userId") Long userId);
 
 
 

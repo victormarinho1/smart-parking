@@ -3,8 +3,13 @@ package com.fatec.smart_parking.parking_records;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -19,10 +24,18 @@ public class ParkingRecordController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping
-    public ResponseEntity<List<ParkingRecordDTO>> findAllCurrentRecords() {
-       return ResponseEntity.ok(this.parkingRecordService.findByCurrentRecords());
+    @GetMapping("/{id}")
+    public Flux<ServerSentEvent<List<ParkingRecordDTO>>> findAllCurrentRecords(@PathVariable Long id) {
+        return Flux.interval(Duration.ofSeconds(5))
+                .flatMap(sequence ->
+                        Mono.fromCallable(() -> parkingRecordService.findByCurrentRecords(id))
+                                .map(records -> ServerSentEvent.<List<ParkingRecordDTO>>builder()
+                                        .data(records)
+                                        .build())
+                                .onErrorReturn(ServerSentEvent.<List<ParkingRecordDTO>>builder().data(Collections.emptyList()).build()) // Tratamento de erro
+                );
     }
+
 
     @GetMapping("/history")
     public ResponseEntity<List<ParkingHistoryDTO>> parkingHistory() {
