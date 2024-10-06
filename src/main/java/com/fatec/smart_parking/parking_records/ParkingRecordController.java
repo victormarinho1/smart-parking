@@ -24,15 +24,15 @@ public class ParkingRecordController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/{id}")
-    public Flux<ServerSentEvent<List<ParkingRecordDTO>>> findAllCurrentRecords(@PathVariable Long id) {
+    @GetMapping
+    public Flux<ServerSentEvent<List<ParkingRecordDTO>>> findAllCurrentRecords() {
         return Flux.interval(Duration.ofSeconds(5))
                 .flatMap(sequence ->
-                        Mono.fromCallable(() -> parkingRecordService.findByCurrentRecords(id))
+                        Mono.fromCallable(() -> parkingRecordService.findByCurrentRecords())
                                 .map(records -> ServerSentEvent.<List<ParkingRecordDTO>>builder()
                                         .data(records)
                                         .build())
-                                .onErrorReturn(ServerSentEvent.<List<ParkingRecordDTO>>builder().data(Collections.emptyList()).build()) // Tratamento de erro
+                                .onErrorReturn(ServerSentEvent.<List<ParkingRecordDTO>>builder().data(Collections.emptyList()).build())
                 );
     }
 
