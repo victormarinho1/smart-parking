@@ -29,12 +29,11 @@ public class ParkingRecordController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping
-    public Flux<ServerSentEvent<List<ParkingRecordDTO>>> findAllCurrentRecords() {
-        User user = authenticationService.getCurrentUser();
+    @GetMapping("/{id}")
+    public Flux<ServerSentEvent<List<ParkingRecordDTO>>> findAllCurrentRecords(@PathVariable Long id) {
         return Flux.interval(Duration.ofSeconds(5))
                 .flatMap(sequence ->
-                        Mono.fromCallable(() -> parkingRecordService.findByCurrentRecords(user.getId()))
+                        Mono.fromCallable(() -> parkingRecordService.findByCurrentRecords(id))
                                 .map(records -> ServerSentEvent.<List<ParkingRecordDTO>>builder()
                                         .data(records)
                                         .build())
