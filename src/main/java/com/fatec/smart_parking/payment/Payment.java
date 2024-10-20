@@ -3,6 +3,7 @@ package com.fatec.smart_parking.payment;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fatec.smart_parking.parking_price.ParkingPrice;
 import com.fatec.smart_parking.parking_records.ParkingRecord;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,23 +22,21 @@ public class Payment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "parking_records_id", insertable = false, updatable = false)
+    @JoinColumn(name = "parking_records_id", nullable = false)
     private ParkingRecord parkingRecord;
 
-    @Column(nullable = false)
-    private BigDecimal amount;
+    @ManyToOne
+    @JoinColumn(name = "parking_prices_id", nullable = false)
+    private ParkingPrice parkingPrice;
 
     @Column(name = "payment_date", nullable = false)
     private LocalDateTime paymentDate;
 
-    @Column(name = "transaction_id", nullable = false)
-    private String transactionId;
-
-    @Column(name = "pix_key", nullable = false)
-    private String pixKey;
-
-    @Column(name = "pix_code", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "pix_code", nullable = false)
     private String pixCode;
+
+    @Column(name = "url_qrcode", nullable = false)
+    private String urlCode;
 
 
 

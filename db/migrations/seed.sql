@@ -8,23 +8,11 @@ CREATE TABLE users(
 	role role_type NOT NULL DEFAULT 'CLIENT',
 	enabled boolean NOT NULL DEFAULT TRUE
 );
-
-CREATE TABLE addresses (
-    id SERIAL PRIMARY KEY,
-    street VARCHAR(100) NOT NULL,
-    neighborhood VARCHAR(50) NOT NULL,
-    city VARCHAR(50) NOT NULL,
-    state VARCHAR(50) NOT NULL,
-    postal_code VARCHAR(20) NOT NULL
-);
  
 CREATE TABLE parkings(
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
-    url_image TEXT,
-    address_id INT,
-	enabled boolean NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (address_id) REFERENCES addresses(id)
+	enabled boolean NOT NULL DEFAULT TRUE
 );
  
 CREATE TABLE color(
@@ -63,17 +51,28 @@ CREATE TABLE parking_records(
     FOREIGN KEY (parking_id) REFERENCES parkings(id)
 );
  
+CREATE TABLE parking_prices (
+    id SERIAL PRIMARY KEY,
+    parking_id INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    end_date TIMESTAMP,
+    FOREIGN KEY (parking_id) REFERENCES parkings(id)
+);
+
 CREATE TABLE payments (
     id SERIAL PRIMARY KEY,
     parking_records_id INT,
-    amount DECIMAL(10, 2) NOT NULL,
+    parking_prices_id INT,
     payment_date TIMESTAMP NOT NULL,
-    transaction_id VARCHAR(100) NOT NULL,
-    pix_key VARCHAR(100) NOT NULL,
-    pix_code TEXT NOT NULL,    
+    pix_code TEXT NOT NULL,   
+    url_qrcode  TEXT NOT NULL,
     CONSTRAINT fk_parking_records
-        FOREIGN KEY (parking_records_id) REFERENCES parking_records (id)
+        FOREIGN KEY (parking_records_id) REFERENCES parking_records (id),
+    CONSTRAINT fk_parking_prices
+        FOREIGN KEY (parking_prices_id) REFERENCES parking_prices (id)
 );
+
  
 /*///////////////// Logs//////////////// */
 CREATE TABLE user_logs (
@@ -201,9 +200,12 @@ INSERT INTO parkings
 (id, "name")
 VALUES(1, 'Shopping Bandeiras');
 
+INSERT INTO parking_prices (parking_id, price, start_date, end_date) 
+VALUES (1, 50.00, CURRENT_TIMESTAMP, NULL);
+
 INSERT INTO parking_records
 (id, vehicles_id, parking_id, entry_time, exit_time)
 VALUES(1, 4, 1, '2024-09-22 19:02:07.960', '2024-09-22 23:02:07.960');
 
-INSERT INTO payments (parking_records_id, amount, payment_date, transaction_id, pix_key, pix_code) 
-VALUES (1, 50.00, '2024-09-22 10:00:00', 'TX123456', 'key@example.com', 'PIX123456789');
+INSERT INTO payments (parking_records_id, payment_date, pix_code, url_qrcode) 
+VALUES (1,'2024-09-22 10:00:00', 'TX123456', 'localshofdaosfodsa');

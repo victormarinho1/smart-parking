@@ -55,6 +55,16 @@ public class ParkingRecordService {
                 .collect(Collectors.toList());
     }
 
+    public ParkingRecord findCurrentByPlate(String plate){
+        Vehicle vehicle = this.vehicleService.findByPlate(plate);
+        List<ParkingRecord> currentRecords = this.parkingRecordRepository.findByUserId(vehicle.getClient().getId());
+        return currentRecords.stream()
+                .filter(record -> record.getVehicle().getPlate().equals(plate))
+                .findFirst()
+                .orElse(null);
+
+    }
+
 
     public List<ParkingHistoryDTO> parkingHistory(){
         User user = this.authenticationService.getCurrentUser();
@@ -83,9 +93,7 @@ public class ParkingRecordService {
             "Num Tem :(",
             payment.getParkingRecord().getParking().getName(),
             "Num Tem :(",
-            payment.getParkingRecord().getVehicle().getModel(),
-            payment.getAmount().toString()
-        );
+            payment.getParkingRecord().getVehicle().getModel());
     }
 
 

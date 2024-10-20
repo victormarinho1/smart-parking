@@ -4,7 +4,6 @@ public record ParkingHistoryDTO(
         String url_image,
         String name,
         String address,
-        String model,
-        String amount
+        String model
 ) {
 }
