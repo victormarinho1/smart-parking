@@ -3,13 +3,10 @@ package com.fatec.smart_parking.user;
 import com.fatec.smart_parking.core.Role;
 
 import com.fatec.smart_parking.core.authentication.AuthenticationService;
-import com.fatec.smart_parking.core.exception.EmailAlreadyTakenException;
 import com.fatec.smart_parking.core.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +55,6 @@ public class UserService{
 
     public UserDTO update(Long id, User user){
         Optional<User> optionalUser = userRepository.findById(id);
-        
         if(optionalUser.isPresent()){
 
             userValidator.checkEmailExists(user.getEmail());
@@ -67,6 +63,22 @@ public class UserService{
             return convertToDTO(userRepository.save(user));
         }
         throw new UserNotFoundException();
+    }
+
+    public User updatePassword(Long id, String password, String newPassword) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                return userRepository.save(user);
+            } else {
+                throw new RuntimeException("Senha atual não confere.");
+            }
+        } else {
+            throw new RuntimeException("Usuário não encontrado.");
+        }
     }
 
     public UserDTO getCurrentUser(){
