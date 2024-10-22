@@ -2,7 +2,6 @@ package com.fatec.smart_parking.payment;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import com.fatec.smart_parking.parking_price.ParkingPrice;
 import com.fatec.smart_parking.parking_records.ParkingRecord;
 import jakarta.persistence.*;
@@ -31,6 +30,9 @@ public class Payment {
 
     @Column(name = "payment_date", nullable = false)
     private LocalDateTime paymentDate;
+
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
 
     @Column(name = "pix_code", nullable = false)
     private String pixCode;

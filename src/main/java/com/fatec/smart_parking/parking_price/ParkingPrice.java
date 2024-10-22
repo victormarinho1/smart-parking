@@ -24,8 +24,11 @@ public class ParkingPrice {
     @JoinColumn(name = "parking_id", nullable = false)
     private Parking parking;
 
-    @Column(name = "price", nullable = false)
-    private BigDecimal price;
+    @Column(name = "fixed_rate", nullable = false)
+    private BigDecimal fixed_rate;
+
+    @Column(name = "extra_hours_rate", nullable = false)
+    private BigDecimal extra_hours_rate;
 
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
