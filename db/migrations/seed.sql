@@ -54,7 +54,8 @@ CREATE TABLE parking_records(
 CREATE TABLE parking_prices (
     id SERIAL PRIMARY KEY,
     parking_id INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
+    fixed_rate DECIMAL(10, 2) NOT NULL,
+    extra_hours_rate DECIMAL(10, 2) NOT NULL,
     start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     end_date TIMESTAMP,
     FOREIGN KEY (parking_id) REFERENCES parkings(id)
@@ -65,6 +66,7 @@ CREATE TABLE payments (
     parking_records_id INT,
     parking_prices_id INT,
     payment_date TIMESTAMP NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
     pix_code TEXT NOT NULL,   
     url_qrcode  TEXT NOT NULL,
     CONSTRAINT fk_parking_records
@@ -200,12 +202,12 @@ INSERT INTO parkings
 (id, "name")
 VALUES(1, 'Shopping Bandeiras');
 
-INSERT INTO parking_prices (parking_id, price, start_date, end_date) 
-VALUES (1, 50.00, CURRENT_TIMESTAMP, NULL);
+INSERT INTO parking_prices (parking_id, fixed_rate, extra_hours_rate, start_date, end_date) 
+VALUES (1, 16.00,4.00, CURRENT_TIMESTAMP, NULL);
 
 INSERT INTO parking_records
-(id, vehicles_id, parking_id, entry_time, exit_time)
-VALUES(1, 4, 1, '2024-09-22 19:02:07.960', '2024-09-22 23:02:07.960');
+(id, vehicles_id, parking_id, entry_time)
+VALUES(1, 4, 1, '2024-09-22 19:00:00.000');
 
-INSERT INTO payments (parking_records_id, payment_date, pix_code, url_qrcode) 
-VALUES (1,'2024-09-22 10:00:00', 'TX123456', 'localshofdaosfodsa');
+INSERT INTO payments (parking_records_id,payment_date, amount, pix_code, url_qrcode) 
+VALUES (1,'2024-09-22 10:00:00', '50.00', 'TX123456', 'localshofdaosfodsa');
