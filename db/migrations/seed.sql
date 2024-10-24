@@ -196,11 +196,11 @@ INSERT INTO make_car (name) VALUES
 ('Fiat');
 
 INSERT INTO vehicles (client_id, make_id, model, plate, year, color_id, enabled) VALUES
-(1, 1, 'Corolla', 'ABC1D23', 2020, 1, TRUE),
-(2, 2, 'Fiesta', 'XYZ4E56', 2019, 2, TRUE),
-(3, 3, 'Onix', 'JKL7M89', 2021, 5, TRUE),
+(1, 1, 'Corolla', 'ANN2F42', 2020, 1, TRUE),
+(2, 2, 'Fiesta', 'POX4G21', 2019, 2, TRUE),
+(3, 3, 'Onix', 'GCW9AG5', 2021, 5, TRUE),
 (1, 4, 'Gol', 'NOP0Q12', 2022, 3, TRUE),
-(2, 5, 'Civic', 'RST3U45', 2020, 4, TRUE);
+(2, 5, 'Civic', 'AZP0909', 2020, 4, TRUE);
 
 INSERT INTO parkings
 (id, "name")
