@@ -5,6 +5,7 @@ import com.fatec.smart_parking.parking_price.ParkingPrice;
 import com.fatec.smart_parking.parking_price.ParkingPriceService;
 import com.fatec.smart_parking.parking_records.ParkingRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +16,9 @@ import java.util.List;
 
 @Service
 public class PaymentService {
+
+    @Value("${qr.code.service.url}")
+    String url;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -35,7 +39,6 @@ public class PaymentService {
     }
 
     public QrCodeResponseDTO generateQrCode(String valor, Long id) {
-        String url = "http://pixqrcode:5000/gerar_qrcode";
         QrCodeDTO qrCodeDTO = new QrCodeDTO(valor,id.toString());
         try{
             QrCodeResponseDTO  qrCodeResponseDTO = restTemplate.postForObject(url, qrCodeDTO, QrCodeResponseDTO.class);
