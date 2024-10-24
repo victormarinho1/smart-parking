@@ -62,5 +62,5 @@ services:
       - smart_parking
 networks:
   smart_parking:
-
+    external: true
 

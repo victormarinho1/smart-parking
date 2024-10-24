@@ -35,7 +35,7 @@ public class PaymentService {
     }
 
     public QrCodeResponseDTO generateQrCode(String valor, Long id) {
-        String url = "http://localhost:5000/gerar_qrcode";
+        String url = "http://pixqrcode:5000/gerar_qrcode";
         QrCodeDTO qrCodeDTO = new QrCodeDTO(valor,id.toString());
         try{
             QrCodeResponseDTO  qrCodeResponseDTO = restTemplate.postForObject(url, qrCodeDTO, QrCodeResponseDTO.class);
