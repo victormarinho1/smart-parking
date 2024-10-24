@@ -10,6 +10,8 @@ import com.fatec.smart_parking.vehicle.Vehicle;
 import com.fatec.smart_parking.vehicle.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +40,7 @@ public class ParkingRecordService {
         ParkingRecordDTO parkingRecordDTO = new ParkingRecordDTO(
                 vehicle.getClient().getName(), vehicle.getModel(),
                 vehicle.getColor().getName(),vehicle.getPlate(),
-                parking.getName(), LocalDateTime.now(),null);
+                parking.getName(), LocalDateTime.now(),null,null);
         this.parkingRecordRepository.save(parkingRecord);
         return parkingRecordDTO;
     }
@@ -74,6 +76,9 @@ public class ParkingRecordService {
 
 
     public ParkingRecordDTO convertToDTO(ParkingRecord parkingRecord) {
+        LocalDateTime now = LocalDateTime.now();
+        int current_hours = this.paymentService.calculateParkedHours(now,parkingRecord.getEntryTime());
+        BigDecimal current_price = this.paymentService.calculateParkingFee(current_hours);
         return new ParkingRecordDTO(
                 parkingRecord.getVehicle().getClient().getName(),
                 parkingRecord.getVehicle().getModel(),
@@ -81,14 +86,17 @@ public class ParkingRecordService {
                 parkingRecord.getVehicle().getPlate(),
                 parkingRecord.getParking().getName(),
                 parkingRecord.getEntryTime(),
-                parkingRecord.getExitTime());
+                parkingRecord.getExitTime(),
+                current_price.toString());
     }
+
+
 
     public ParkingHistoryDTO convertToDTO(Payment payment){
         return new ParkingHistoryDTO(
-            "Num Tem :(",
+            payment.getUrlCode(),
             payment.getParkingRecord().getParking().getName(),
-            "Num Tem :(",
+            payment.getAmount().toString(),
             payment.getParkingRecord().getVehicle().getModel());
     }
 

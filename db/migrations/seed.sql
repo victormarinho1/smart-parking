@@ -63,8 +63,8 @@ CREATE TABLE parking_prices (
 
 CREATE TABLE payments (
     id SERIAL PRIMARY KEY,
-    parking_records_id INT,
-    parking_prices_id INT,
+    parking_records_id INT NOT NULL,
+    parking_prices_id INT NOT NULL,
     payment_date TIMESTAMP NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     pix_code TEXT NOT NULL,   
@@ -147,6 +147,10 @@ INSERT INTO  users
 ("name", email, "password", "role")
 VALUES('Administrador', 'admin@gmail.com', '$2a$10$1HVGUdEQ1y4DX10DRUKDK.z/i59K9iXQeQty8Pwc8znnuSoua2Ta6', 'ADMIN'::public."role_type");
 
+INSERT INTO users
+("name", email, "password", "role", enabled)
+VALUES('Anderson Barbosa', 'anderson.barbosa@gmail.com', '$2a$10$tUo05DzvN7VIYTq1uiRIjOM22QoCFwU/OdYeB9lzS/H38NV/fT4Pi', 'CLIENT'::public."role_type", true);
+
 INSERT INTO users (name, email, password, role) VALUES
 ('João Silva', 'joao.silva@example.com', 'senha123', 'CLIENT'),
 ('Maria Oliveira', 'maria.oliveira@example.com', 'senha456', 'CLIENT'),
@@ -207,7 +211,32 @@ VALUES (1, 16.00,4.00, CURRENT_TIMESTAMP, NULL);
 
 INSERT INTO parking_records
 (id, vehicles_id, parking_id, entry_time)
-VALUES(1, 4, 1, '2024-09-22 19:00:00.000');
+VALUES(1, 4, 1, '2024-09-05 19:00:00.000');
 
-INSERT INTO payments (parking_records_id,payment_date, amount, pix_code, url_qrcode) 
-VALUES (1,'2024-09-22 10:00:00', '50.00', 'TX123456', 'localshofdaosfodsa');
+
+INSERT INTO parking_records
+(id, vehicles_id, parking_id, entry_time,exit_time)
+VALUES(2, 5, 1, '2024-09-10 08:00:00.000','2024-09-10 15:00:00.000');
+
+INSERT INTO parking_records
+(id, vehicles_id, parking_id, entry_time, exit_time)
+VALUES(3, 2, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+
+INSERT INTO parking_records
+(id, vehicles_id, parking_id, entry_time )
+VALUES(4, 2, 1, '2024-10-24 08:00:00.000');
+
+INSERT INTO parking_records
+(id, vehicles_id, parking_id, entry_time)
+VALUES(5, 5, 1, '2024-10-24 10:00:00.000');
+
+
+INSERT INTO payments (parking_records_id, parking_prices_id, payment_date, amount, pix_code, url_qrcode) 
+VALUES (1,1,'2024-09-22 10:00:00', '50.00', 'pix_code_1', 'url_pagamento_1');
+
+INSERT INTO payments (parking_records_id, parking_prices_id, payment_date, amount, pix_code, url_qrcode) 
+VALUES (2,1,'2024-09-10 14:50:00', '28.00', 'pix_code_2', 'http://127.0.0.1:5000/static/qrcodes/pixqrcode_2_20240910145000.png');
+
+INSERT INTO payments (parking_records_id, parking_prices_id, payment_date, amount, pix_code, url_qrcode) 
+VALUES (3,1,'2024-09-22 13:47:00', '16.00', 'pix_code_3', 'http://127.0.0.1:5000/static/qrcodes/pixqrcode_2_20240922134700.png');

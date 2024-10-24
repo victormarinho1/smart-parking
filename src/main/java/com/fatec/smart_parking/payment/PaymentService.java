@@ -48,13 +48,13 @@ public class PaymentService {
         return this.paymentRepository.save(payment);
     }
 
-    private int calculateParkedHours(LocalDateTime payment_time, LocalDateTime entryTime) {
+    public int calculateParkedHours(LocalDateTime payment_time, LocalDateTime entryTime) {
         long hoursBetween = java.time.Duration.between(entryTime, payment_time).toHours();
         return (int) Math.max(0, hoursBetween);
     }
 
 
-    private BigDecimal calculateParkingFee(int parkedHours) {
+    public BigDecimal calculateParkingFee(int parkedHours) {
         ParkingPrice parkingPrice = this.parkingPriceService.findCurrent();
         BigDecimal fixedRate = parkingPrice.getFixed_rate();
         BigDecimal extraHourRate = parkingPrice.getExtra_hours_rate();

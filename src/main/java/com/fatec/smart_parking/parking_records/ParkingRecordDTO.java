@@ -9,6 +9,7 @@ public record ParkingRecordDTO(
         String plate,
         String parking,
         LocalDateTime entry_time,
-        LocalDateTime exit_time
+        LocalDateTime exit_time,
+        String current_amount
 ) {
 }
