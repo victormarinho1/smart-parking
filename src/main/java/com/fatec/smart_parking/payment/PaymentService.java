@@ -1,10 +1,12 @@
 package com.fatec.smart_parking.payment;
 
+import com.fatec.smart_parking.core.exception.QrCodeGenerationException;
 import com.fatec.smart_parking.parking_price.ParkingPrice;
 import com.fatec.smart_parking.parking_price.ParkingPriceService;
 import com.fatec.smart_parking.parking_records.ParkingRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -35,8 +37,13 @@ public class PaymentService {
     public QrCodeResponseDTO generateQrCode(String valor, Long id) {
         String url = "http://localhost:5000/gerar_qrcode";
         QrCodeDTO qrCodeDTO = new QrCodeDTO(valor,id.toString());
-        QrCodeResponseDTO  qrCodeResponseDTO = restTemplate.postForObject(url, qrCodeDTO, QrCodeResponseDTO.class);
-        return qrCodeResponseDTO;
+        try{
+            QrCodeResponseDTO  qrCodeResponseDTO = restTemplate.postForObject(url, qrCodeDTO, QrCodeResponseDTO.class);
+            return qrCodeResponseDTO;
+        }catch (RestClientException e){
+            throw new QrCodeGenerationException();
+        }
+
     }
 
     public Payment create(ParkingRecord parkingRecord) {

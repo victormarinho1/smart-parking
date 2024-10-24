@@ -1,6 +1,5 @@
 package com.fatec.smart_parking.payment;
 
-import com.fatec.smart_parking.parking.ParkingRepository;
 import com.fatec.smart_parking.parking_records.ParkingRecord;
 import com.fatec.smart_parking.parking_records.ParkingRecordDTO;
 import com.fatec.smart_parking.parking_records.ParkingRecordService;
