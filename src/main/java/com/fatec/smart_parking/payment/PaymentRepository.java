@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT p FROM Payment p JOIN ParkingRecord pr ON pr.id = p.parkingRecord.id " +
@@ -12,4 +13,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "WHERE pr.exitTime IS NOT NULL AND v.client.id = :userId")
     List<Payment> findPaymentsByUserId(@Param("userId") Long userId);
 
+    Optional<Payment> findByParkingRecordId(Long parkingRecordId);
 }

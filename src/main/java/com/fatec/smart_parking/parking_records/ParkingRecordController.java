@@ -28,6 +28,11 @@ public class ParkingRecordController {
         this.parkingRecordService.create(plateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+    @PostMapping("/exit")
+    public ResponseEntity<ParkingRecordDTO> finalize(@RequestBody PlateDTO plateDTO) {
+        this.parkingRecordService.finalize(plateDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     @GetMapping("/{id}")
     public Flux<ServerSentEvent<List<ParkingRecordDTO>>> findAllCurrentRecords(@PathVariable Long id) {

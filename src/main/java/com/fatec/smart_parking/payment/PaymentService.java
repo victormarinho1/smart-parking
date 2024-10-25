@@ -1,5 +1,6 @@
 package com.fatec.smart_parking.payment;
 
+import com.fatec.smart_parking.core.exception.ParkingNotPaidException;
 import com.fatec.smart_parking.core.exception.QrCodeGenerationException;
 import com.fatec.smart_parking.parking_price.ParkingPrice;
 import com.fatec.smart_parking.parking_price.ParkingPriceService;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PaymentService {
@@ -38,6 +40,13 @@ public class PaymentService {
 
     }
 
+    public Payment findByParkingRecord(Long parking_record_id) {
+        Optional<Payment>  optPayment= this.paymentRepository.findByParkingRecordId(parking_record_id);
+        if(optPayment.isPresent()){
+            return optPayment.get();
+        }
+        throw new ParkingNotPaidException();
+    }
     public QrCodeResponseDTO generateQrCode(String valor, Long id) {
         QrCodeDTO qrCodeDTO = new QrCodeDTO(valor,id.toString());
         try{
@@ -46,7 +55,6 @@ public class PaymentService {
         }catch (RestClientException e){
             throw new QrCodeGenerationException();
         }
-
     }
 
     public Payment create(ParkingRecord parkingRecord) {

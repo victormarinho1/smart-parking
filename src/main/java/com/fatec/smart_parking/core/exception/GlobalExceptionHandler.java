@@ -154,4 +154,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(ParkingNotPaidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<ApiError> handleParkingNotPaidException(ParkingNotPaidException exception, HttpServletRequest request) {
+        ApiError apiError = new ApiError(
+                request.getRequestURI(),
+                "Parking not paid",
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
 }

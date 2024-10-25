@@ -1,6 +1,7 @@
 package com.fatec.smart_parking.parking_records;
 
 import com.fatec.smart_parking.core.authentication.AuthenticationService;
+import com.fatec.smart_parking.core.exception.ParkingNotPaidException;
 import com.fatec.smart_parking.parking.Parking;
 import com.fatec.smart_parking.parking.ParkingService;
 import com.fatec.smart_parking.payment.Payment;
@@ -45,6 +46,28 @@ public class ParkingRecordService {
         return parkingRecordDTO;
     }
 
+    public boolean isPaid(Long parking_record_id){
+       Payment payment =  this.paymentService.findByParkingRecord(parking_record_id);
+        if(payment != null){
+            return true;
+        }
+        return false;
+    }
+
+    public void finalize(PlateDTO plateDTO){
+        Vehicle vehicle = this.vehicleService.findByPlate(plateDTO.plate());
+        ParkingRecord parkingRecord = findCurrentByPlate(plateDTO.plate());
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime minutes = now.minusMinutes(15);
+        if(!parkingRecord.getEntryTime().isBefore(minutes)){
+            if(!isPaid(parkingRecord.getId())){
+                throw new ParkingNotPaidException();
+            }
+        }
+        parkingRecord.setExitTime(LocalDateTime.now());
+        this.parkingRecordRepository.save(parkingRecord);
+    }
+
     public List<ParkingRecordDTO> findByCurrentRecords(Long id){
         List<ParkingRecord> parkingRecordList = this.parkingRecordRepository.findByUserId(id);
         return  parkingRecordList.stream()
@@ -59,15 +82,12 @@ public class ParkingRecordService {
                 .filter(record -> record.getVehicle().getPlate().equals(plate))
                 .findFirst()
                 .orElse(null);
-
     }
 
 
     public List<ParkingHistoryDTO> parkingHistory(){
         User user = this.authenticationService.getCurrentUser();
         List<Payment> paymentList = this.paymentService.findAllByUser(user.getId());
-
-
         return  paymentList.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
