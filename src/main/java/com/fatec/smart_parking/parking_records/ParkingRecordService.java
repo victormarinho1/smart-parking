@@ -43,6 +43,7 @@ public class ParkingRecordService {
                 vehicle.getColor().getName(),vehicle.getPlate(),
                 parking.getName(), LocalDateTime.now(),null,null);
         this.parkingRecordRepository.save(parkingRecord);
+        System.out.println(plateDTO.plate());
         return parkingRecordDTO;
     }
 
