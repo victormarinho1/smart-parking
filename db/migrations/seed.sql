@@ -210,26 +210,25 @@ INSERT INTO parking_prices (parking_id, fixed_rate, extra_hours_rate, start_date
 VALUES (1, 16.00,4.00, CURRENT_TIMESTAMP, NULL);
 
 INSERT INTO parking_records
-(id, vehicles_id, parking_id, entry_time)
-VALUES(1, 4, 1, '2024-09-05 19:00:00.000');
+(vehicles_id, parking_id, entry_time)
+VALUES(4, 1, '2024-09-05 19:00:00.000');
 
 
 INSERT INTO parking_records
-(id, vehicles_id, parking_id, entry_time,exit_time)
-VALUES(2, 5, 1, '2024-09-10 08:00:00.000','2024-09-10 15:00:00.000');
+(vehicles_id, parking_id, entry_time,exit_time)
+VALUES(5, 1, '2024-09-10 08:00:00.000','2024-09-10 15:00:00.000');
 
 INSERT INTO parking_records
-(id, vehicles_id, parking_id, entry_time, exit_time)
-VALUES(3, 2, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
-
-
-INSERT INTO parking_records
-(id, vehicles_id, parking_id, entry_time )
-VALUES(4, 2, 1, '2024-10-24 08:00:00.000');
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(2, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
 
 INSERT INTO parking_records
-(id, vehicles_id, parking_id, entry_time)
-VALUES(5, 5, 1, '2024-10-24 10:00:00.000');
+(vehicles_id, parking_id, entry_time )
+VALUES(2, 1, '2024-10-24 08:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time)
+VALUES(5, 1, '2024-10-24 10:00:00.000');
 
 
 INSERT INTO payments (parking_records_id, parking_prices_id, payment_date, amount, pix_code, url_qrcode) 
