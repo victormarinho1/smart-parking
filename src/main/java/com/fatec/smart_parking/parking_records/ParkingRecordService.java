@@ -60,7 +60,7 @@ public class ParkingRecordService {
         ParkingRecord parkingRecord = findCurrentByPlate(plateDTO.plate());
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime minutes = now.minusMinutes(15);
-        if(!parkingRecord.getEntryTime().isBefore(minutes)){
+        if(parkingRecord.getEntryTime().isBefore(minutes)){
             if(!isPaid(parkingRecord.getId())){
                 throw new ParkingNotPaidException();
             }
