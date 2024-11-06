@@ -9,6 +9,9 @@ public interface ParkingRecordRepository extends JpaRepository<ParkingRecord, Lo
     @Query("SELECT pr FROM ParkingRecord pr JOIN pr.vehicle v WHERE pr.entryTime IS NOT NULL AND pr.exitTime IS NULL AND v.client.id = :userId")
     List<ParkingRecord> findByUserId( Long userId);
 
+    @Query("SELECT pr FROM ParkingRecord pr JOIN pr.vehicle v WHERE pr.entryTime IS NOT NULL AND pr.exitTime IS NULL")
+    List<ParkingRecord> findAllCurrent();
+
 
 
 

@@ -22,6 +22,9 @@ public class SecurityConfig {
     @Autowired
     SecurityFilter securityFilter;
 
+    @Autowired
+    CustomAccessDeniedHandler customAccessDeniedHandler;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -34,8 +37,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/v1/auth/reset-password").permitAll()
                         .requestMatchers("/api/v1/parking-records/{id}").permitAll()
                         .requestMatchers( AUTH_WHITELIST).permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

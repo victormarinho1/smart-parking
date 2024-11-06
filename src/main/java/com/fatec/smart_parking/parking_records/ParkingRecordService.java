@@ -94,6 +94,12 @@ public class ParkingRecordService {
                 .collect(Collectors.toList());
     }
 
+    public List<ParkingRecordAllDTO> findAllCurrent(){
+        List<ParkingRecord> parkingRecords = this.parkingRecordRepository.findAllCurrent();
+        return parkingRecords.stream()
+                .map(this::convertToAllDTO)
+                .collect(Collectors.toList());
+    }
 
 
     public ParkingRecordDTO convertToDTO(ParkingRecord parkingRecord) {
@@ -110,7 +116,17 @@ public class ParkingRecordService {
                 parkingRecord.getExitTime(),
                 current_price.toString());
     }
-
+    public ParkingRecordAllDTO convertToAllDTO(ParkingRecord parkingRecord){
+        return new ParkingRecordAllDTO(
+                parkingRecord.getVehicle().getClient().getName(),
+                parkingRecord.getVehicle().getClient().getEmail(),
+                parkingRecord.getVehicle().getModel(),
+                parkingRecord.getVehicle().getPlate(),
+                parkingRecord.getParking().getName(),
+                parkingRecord.getEntryTime(),
+                parkingRecord.getExitTime()
+        );
+    }
 
 
     public ParkingHistoryDTO convertToDTO(Payment payment){
@@ -120,6 +136,7 @@ public class ParkingRecordService {
             payment.getAmount().toString(),
             payment.getParkingRecord().getVehicle().getModel());
     }
+
 
 
 
