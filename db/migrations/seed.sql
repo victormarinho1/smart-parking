@@ -141,6 +141,27 @@ ORDER BY
     trigger_name;
 
 
+-- Media registro meses
+CREATE OR REPLACE FUNCTION calculate_average_records_per_month()
+RETURNS TABLE(year INT, month INT, average_records_per_month FLOAT) AS
+$$
+BEGIN
+    RETURN QUERY
+    SELECT
+        EXTRACT(YEAR FROM entry_time)::INT AS year,  -- Cast para INT
+        EXTRACT(MONTH FROM entry_time)::INT AS month,  -- Cast para INT
+        COUNT(*)::FLOAT / (EXTRACT(DAY FROM (date_trunc('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 day')))
+    FROM
+        parking_records
+    GROUP BY
+        EXTRACT(YEAR FROM entry_time),
+        EXTRACT(MONTH FROM entry_time)
+    ORDER BY
+        year,
+        month;
+END;
+$$ LANGUAGE plpgsql;
+
 --Seed
 
 INSERT INTO  users
@@ -156,7 +177,10 @@ INSERT INTO users (name, email, password, role) VALUES
 ('Maria Oliveira', 'maria.oliveira@example.com', 'senha456', 'CLIENT'),
 ('Carlos Santos', 'carlos.santos@example.com', 'senha789', 'CLIENT'),
 ('Ana Pereira', 'ana.pereira@example.com', 'senha321', 'CLIENT'),
-('Ricardo Gomes', 'ricardo.gomes@example.com', 'senha654', 'CLIENT');
+('Ricardo Gomes', 'ricardo.gomes@example.com', 'senha654', 'CLIENT'),
+('Fernanda Lima','fernanda.lima@example.com','fernanda','CLIENT'),
+('Lucas Almeida','lucas.almeida@example.com','lucas','CLIENT'),
+('Tatiane Rocha', 'tatiane.rocha@example.com','tatiane','CLIENT');
 
 
 
@@ -164,7 +188,6 @@ INSERT INTO color (name) VALUES
 ('Preto'),
 ('Branco'),
 ('Prata'),
-
 ('Vermelho'),
 ('Azul'),
 ('Verde'),
@@ -200,7 +223,12 @@ INSERT INTO vehicles (client_id, make_id, model, plate, year, color_id, enabled)
 (2, 2, 'Fiesta', 'POX4G21', 2019, 2, TRUE),
 (3, 3, 'Onix', 'GCW9AG5', 2021, 5, TRUE),
 (1, 4, 'Gol', 'NOP0Q12', 2022, 3, TRUE),
-(2, 5, 'Civic', 'AZP0909', 2020, 4, TRUE);
+(2, 5, 'Civic', 'AZP0909', 2020, 4, TRUE),
+(4, 6, 'Sentra', 'MNB1C23', 2021, 4, TRUE),  
+(5, 7, 'Tucson', 'XYZ2D34', 2022, 3, TRUE),  
+(6, 8, 'Kicks', 'ABC3E45', 2021, 5, TRUE),  
+(7, 9, 'X1', 'FGH4I56', 2023, 1, TRUE),      
+(8, 10, 'Civic', 'JKL5M67', 2020, 2, TRUE);  
 
 INSERT INTO parkings
 (id, "name")
@@ -210,9 +238,8 @@ INSERT INTO parking_prices (parking_id, fixed_rate, extra_hours_rate, start_date
 VALUES (1, 16.00,4.00, CURRENT_TIMESTAMP, NULL);
 
 INSERT INTO parking_records
-(vehicles_id, parking_id, entry_time)
-VALUES(4, 1, '2024-09-05 19:00:00.000');
-
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(4, 1, '2024-09-05 19:00:00.000','2024-09-05 23:00:00.000');
 
 INSERT INTO parking_records
 (vehicles_id, parking_id, entry_time,exit_time)
@@ -223,12 +250,215 @@ INSERT INTO parking_records
 VALUES(2, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
 
 INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(1, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(1, 1, '2024-09-21 10:00:00.000','2024-09-21 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(1, 1, '2024-09-22 10:00:00.000','2024-09-22 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(1, 1, '2024-09-23 10:00:00.000','2024-09-23 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(1, 1, '2024-09-24 10:00:00.000','2024-09-24 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(1, 1, '2024-09-25 10:00:00.000','2024-09-25 14:00:00.000');
+
+-- 
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(3, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(3, 1, '2024-09-21 10:00:00.000','2024-09-21 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(3, 1, '2024-09-22 10:00:00.000','2024-09-22 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(3, 1, '2024-09-23 10:00:00.000','2024-09-23 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(3, 1, '2024-09-24 10:00:00.000','2024-09-24 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(3, 1, '2024-09-25 10:00:00.000','2024-09-25 14:00:00.000');
+
+-- 
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(4, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(4, 1, '2024-09-21 10:00:00.000','2024-09-21 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(4, 1, '2024-09-22 10:00:00.000','2024-09-22 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(4, 1, '2024-09-23 10:00:00.000','2024-09-23 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(4, 1, '2024-09-24 10:00:00.000','2024-09-24 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(4, 1, '2024-09-25 10:00:00.000','2024-09-25 14:00:00.000');
+
+-- 
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(6, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(6, 1, '2024-09-21 10:00:00.000','2024-09-21 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(6, 1, '2024-09-22 10:00:00.000','2024-09-22 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(6, 1, '2024-09-23 10:00:00.000','2024-09-23 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(6, 1, '2024-09-24 10:00:00.000','2024-09-24 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(6, 1, '2024-09-25 10:00:00.000','2024-09-25 14:00:00.000');
+
+-- 
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(7, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(7, 1, '2024-09-21 10:00:00.000','2024-09-21 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(7, 1, '2024-09-22 10:00:00.000','2024-09-22 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(7, 1, '2024-09-23 10:00:00.000','2024-09-23 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(7, 1, '2024-09-24 10:00:00.000','2024-09-24 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(7, 1, '2024-09-25 10:00:00.000','2024-09-25 14:00:00.000');
+
+-- 
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(8, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(8, 1, '2024-09-21 10:00:00.000','2024-09-21 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(8, 1, '2024-09-22 10:00:00.000','2024-09-22 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(8, 1, '2024-09-23 10:00:00.000','2024-09-23 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(8, 1, '2024-09-24 10:00:00.000','2024-09-24 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(8, 1, '2024-09-25 10:00:00.000','2024-09-25 14:00:00.000');
+
+-- 
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(9, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(9, 1, '2024-09-21 10:00:00.000','2024-09-21 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(9, 1, '2024-09-22 10:00:00.000','2024-09-22 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(9, 1, '2024-09-23 10:00:00.000','2024-09-23 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(9, 1, '2024-09-24 10:00:00.000','2024-09-24 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(9, 1, '2024-09-25 10:00:00.000','2024-09-25 14:00:00.000');
+
+-- 
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(10, 1, '2024-09-20 10:00:00.000','2024-09-20 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(10, 1, '2024-09-21 10:00:00.000','2024-09-21 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(10, 1, '2024-09-22 10:00:00.000','2024-09-22 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(10, 1, '2024-09-23 10:00:00.000','2024-09-23 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(10, 1, '2024-09-24 10:00:00.000','2024-09-24 14:00:00.000');
+
+INSERT INTO parking_records
+(vehicles_id, parking_id, entry_time, exit_time)
+VALUES(10, 1, '2024-09-25 10:00:00.000','2024-09-25 14:00:00.000');
+
+INSERT INTO parking_records
 (vehicles_id, parking_id, entry_time )
 VALUES(2, 1, '2024-10-24 08:00:00.000');
 
 INSERT INTO parking_records
 (vehicles_id, parking_id, entry_time)
 VALUES(5, 1, '2024-10-24 10:00:00.000');
+
+
 
 
 INSERT INTO payments (parking_records_id, parking_prices_id, payment_date, amount, pix_code, url_qrcode) 

@@ -5,6 +5,7 @@ import com.fatec.smart_parking.client.ClientService;
 import com.fatec.smart_parking.parking_records.ParkingRecordAllDTO;
 import com.fatec.smart_parking.parking_records.ParkingRecordDTO;
 import com.fatec.smart_parking.parking_records.ParkingRecordService;
+import com.fatec.smart_parking.parking_records.ParkingRecordsAverageDTO;
 import com.fatec.smart_parking.user.User;
 import com.fatec.smart_parking.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,15 @@ public class AdminController {
         return ResponseEntity.ok(parkingRecordDTOS);
 
     }
+
+    @GetMapping("/average-months")
+    public ResponseEntity<List<ParkingRecordsAverageDTO>> findAllAverageMonth(){
+        List<ParkingRecordsAverageDTO> parkingRecordsAverageDTOS = this.parkingRecordService.findAllAverage();
+        return ResponseEntity.ok(parkingRecordsAverageDTOS);
+
+    }
+
+
 
 
 
