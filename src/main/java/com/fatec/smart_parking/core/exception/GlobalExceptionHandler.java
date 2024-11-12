@@ -168,4 +168,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(TokenInvalidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<ApiError> handleTokenInvalidException(ParkingNotPaidException exception, HttpServletRequest request) {
+        ApiError apiError = new ApiError(
+                request.getRequestURI(),
+                "Token invalid or expired token",
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
 }
