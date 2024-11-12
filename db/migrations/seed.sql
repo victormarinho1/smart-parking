@@ -75,6 +75,14 @@ CREATE TABLE payments (
         FOREIGN KEY (parking_prices_id) REFERENCES parking_prices (id)
 );
 
+CREATE TABLE email_verificator(
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expiration_date TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    verified BOOLEAN NOT NULL DEFAULT FALSE
+);
  
 /*///////////////// Logs//////////////// */
 CREATE TABLE user_logs (
