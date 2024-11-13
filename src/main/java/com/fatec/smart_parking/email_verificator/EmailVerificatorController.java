@@ -13,7 +13,7 @@ public class EmailVerificatorController {
 
     @PostMapping
     public ResponseEntity create(@RequestBody EmailVerificatorDTO dto){
-        this.emailVerificatorService.create(dto);
+        this.emailVerificatorService.create(dto.email());
         return ResponseEntity.ok().build();
     }
 

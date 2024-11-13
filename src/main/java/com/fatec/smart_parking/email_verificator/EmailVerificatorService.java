@@ -1,6 +1,7 @@
 package com.fatec.smart_parking.email_verificator;
 
 import com.fatec.smart_parking.core.email.EmailService;
+import com.fatec.smart_parking.core.exception.EmailNotVerifiedException;
 import com.fatec.smart_parking.core.exception.TokenInvalidException;
 import com.fatec.smart_parking.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class EmailVerificatorService {
     @Autowired
     private UserRepository userRepository;
 
-    public EmailVerificatorDTO create(EmailVerificatorDTO dto){
+    public EmailVerificatorDTO create(String email){
         String token = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(3);
-        EmailVerificator emailVerificator = new EmailVerificator(dto.email(),token,expirationTime,now);
+        EmailVerificator emailVerificator = new EmailVerificator(email,token,expirationTime,now);
         this.emailVerificatorRepository.save(emailVerificator);
-        return sendEmailVerificationLink(dto,token);
+        return sendEmailVerificationLink(email,token);
     }
 
     public void checkToken(String token){
@@ -40,12 +41,20 @@ public class EmailVerificatorService {
         }
     }
 
+    public boolean isVerified (String email){
+        Optional<EmailVerificator> optEmail = this.emailVerificatorRepository.findByEmailAndVerifiedTrue(email);
+        if(optEmail.isPresent()){
+            return true;
+        }
+        throw new EmailNotVerifiedException();
+    }
 
-    public EmailVerificatorDTO sendEmailVerificationLink(EmailVerificatorDTO emailVerificatorDTO, String token) {
+
+    public EmailVerificatorDTO sendEmailVerificationLink(String email, String token) {
             String verificationLink = "http://localhost:8080/api/v1/email-checker/" + token;
 
             this.emailService.sendHtmlMessage(
-                    emailVerificatorDTO.email(),
+                    email,
                     "Verifique seu endereço de e-mail",
                     "<!DOCTYPE html>\n" +
                             "<html lang=\"pt-BR\">\n" +
@@ -110,7 +119,7 @@ public class EmailVerificatorService {
 
 
         EmailVerificatorDTO emailResponseDTO = new EmailVerificatorDTO(
-                "E-mail de verificação enviado para " + emailVerificatorDTO.email()
+                "E-mail de verificação enviado para " + email
         );
 
         return emailResponseDTO;
